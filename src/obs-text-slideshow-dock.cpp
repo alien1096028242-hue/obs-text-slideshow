@@ -206,6 +206,8 @@ void TextSlideshowDock::updateTexts(QListWidget *textList,
 				    struct slideshow_t *active_slideshow)
 {
 	texts.clear();
+	if (!active_slideshow->source) return;
+	
 	proc_handler_t *handler =
 		obs_source_get_proc_handler(active_slideshow->source);
 	calldata_t cd = {0};
@@ -322,3 +324,8 @@ TextSlideshowDock::TextSlideshowDock(QWidget *parent)
 }
 
 TextSlideshowDock::~TextSlideshowDock() {}
+
+void TextSlideshowDock::dock_get_texts(const char *texts)
+{
+	UNUSED_PARAMETER(texts);
+}
