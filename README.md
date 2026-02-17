@@ -1,74 +1,29 @@
-# obs-text-slideshow
+# OBS Text Slideshow (OBS 32.x 兼容测试版)
 
-[![latest-tag](https://badgen.net/github/release/jbwong05/obs-text-slideshow)](https://github.com/jbwong05/obs-text-slideshow)
-[![Downloads](https://img.shields.io/github/downloads/jbwong05/obs-text-slideshow/total?cacheSeconds=3600)](https://github.com/jbwong05/obs-text-slideshow/releases)
-![CI Multiplatform Build](https://github.com/jbwong05/obs-text-slideshow/actions/workflows/main.yml/badge.svg)
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate/?business=924NBJPZRVNXY&no_recurring=0&currency_code=USD)
+这是一个专门为 OBS Studio 开发的文本轮播插件。由于原作者已停止维护，本项目旨在修复其在 OBS 新版本（特别是 Qt6 架构）下的运行问题。
 
-Inspired by the built in [image slideshow](https://github.com/obsproject/obs-studio/blob/master/plugins/image-source/obs-slideshow.c), except for text sources instead. Both Free Type 2 and GDI+ are supported. Useful for displaying song lyrics, captions, etc.
+## ⚠️ 版本声明与免责
+* **当前版本**: v3.0.0-beta
+* **兼容性**: 针对 **OBS Studio 30.0 / 31.0 / 32.0.4+** 进行了 API 修复。
+* **稳定性说明**: 此版本为初步编译成功的测试版。开发者仅进行了基础的功能加载测试，尚未进行长时间或极端环境下的压力测试。**建议在非正式生产环境中使用。**
 
-Note: This plugin is not under active development and has not been updated to support OBS 28.0 as I do not have time at the moment. If you wish to continue development of this plugin, feel free to fork the repo
+## 🛠️ 核心贡献说明（特别强调）
+本仓库的这次成功升级并非我个人的独立技术突破。
+* **逻辑实现**: 所有的底层 API 适配代码、自动化编译脚本（GitHub Actions YAML）以及复杂的环境搭建逻辑，均由 **AI 助手 (Gemini)** 完成。
+* **我的角色**: 我仅作为一名“脚本小子（Script Kiddie）”，负责搬运、复制粘贴代码并利用 GitHub 的自动化工具进行触发测试。
+* **技术致敬**: 这次更新是 AI 辅助开发的成果，我只是完成了最后的一公里交付。
 
-## Usage
-This plugin functions exactly as the built in [image slideshow](https://github.com/obsproject/obs-studio/blob/master/plugins/image-source/obs-slideshow.c) plugin, except instead of transitioning between image sources it transitions between text sources instead. Simply click the add source button and add the Text Slide Show source. Text sources can be added manually using the default `Slide Texts` box or read from file by selecting the read from file option and specifying the file path(s). The expected format of the text file(s) is described [below](https://github.com/jbwong05/obs-text-slideshow#text-file-format). Transitioning between text sources manually can be done using OBS's media controls or using the built in [dock](https://github.com/jbwong05/obs-text-slideshow#dock).
+## ✨ 本次修复重点
+* **API 适配**: 修复了 OBS 30+ 之后 `obs_frontend_add_custom_qdock` 函数的参数调用冲突。
+* **架构升级**: 弃用旧版 Qt5，全面适配 **Qt6** 环境。
+* **自动发布**: 搭建了全自动 CI/CD 流程，通过 GitHub Actions 实现 Windows 平台的云端编译与产物分发。
 
-### Text file format
-#### Single text file format
-By default, if no custom delimiter is specified, the new line character is chosen as the delimiter as follows:
-```
-text for first
-text source
+## 📥 安装方法
+1. 前往本仓库的 [Releases](https://github.com/你的用户名/obs-text-slideshow/releases) 页面。
+2. 下载 `v3.0.0` 的 DLL 文件。
+3. 将 `obs-text-slideshow.dll` 放置到你的 OBS 安装目录：
+   `obs-studio\obs-plugins\64bit\`
+4. 重新启动 OBS，在“源”列表中寻找或在“工具/视图”中检查 Dock 窗口。
 
-text for second text source
-
-text for third text
-source
-
-single line is supported
-
-multiline is
-supported
-
-etc.
-```
-Custom delimiters can also be specified so other characters can be used as delimiters instead of the new line character.
-
-#### Multiple text file format
-For the multiple text file option, the text from each text file corresponds to the text for one text source in the slideshow.
-
-### Dock
-To open the dock, Select View -> Docks -> OBS Text Slide Show. The dock will display the first Text Slide Show source for the current scene as well as all of its text sources below. Clicking on the text sources on the dock will cause the source to transition to this text source. The drop down at the top of the dock can be used to have the dock display another Text Slide Show on the current scene other than the first. Only Text Slide Show sources on the current scene can be viewed on the dock. When the current scene is changed, the dock and will update accordingly to include only the Text Slide Show sources on the new scene.
-
-## Installation
-Installers can be found in the [Releases](https://github.com/jbwong05/obs-text-slideshow/releases) section.
-
-Note: The Windows and macOS installers are currently unsigned because I don't have money to purchase a certificate to sign the Windows installer or to purchase a subscription for the Apple Developer program in order to sign and notarize the macOS pkg installer. Unfortunately as a result these installers may be flagged by certain antivirus programs and may have to be temporarily disabled in order for the installer to be allowed to run.
-
-## Building from Source
-
-### Windows
-```
-git clone https://github.com/jbwong05/obs-text-slideshow.git
-cd obs-text-slideshow
-./.github/scripts/Build-Windows.ps1
-```
-
-### Linux
-```
-git clone https://github.com/jbwong05/obs-text-slideshow.git
-cd obs-text-slideshow
-./.github/scripts/build-linux.sh
-```
-
-### OS X (Not supported at the moment)
-```
-git clone https://github.com/jbwong05/obs-text-slideshow.git
-cd obs-text-slideshow
-./.github/scripts/build-macos.sh
-```
-
-## Possible future work
-- [x] Text input from files (UTF-8)
-- [ ] Individual text settings for each text source
-- [x] GUI dock for easier transitioning between sources
-  - [x] Find work around for the need for a `refresh sources` button; ~~because the obs-frontend-api doesn't have a source added or edited event~~ libobs handles the different signals for sources and not the frontend api
+## 📝 开发者日记
+虽然我只是一个代码的搬运工，但我希望这个由 AI 赋予新生的小插件能解决你在 OBS 32+ 下的燃眉之急。如果遇到崩溃或 Bug，欢迎提交 Issue，我会再次请教 AI 尝试解决。
